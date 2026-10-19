@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusTube</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon-wrapper">
+          <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3" fill="url(#brand-grad)"></polygon>
+            <defs>
+              <linearGradient id="brand-grad" x1="5" y1="3" x2="19" y2="21" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FF2A54"/>
+                <stop offset="1" stop-color="#8B5CF6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">FocusTube</span>
+          <span class="brand-status" id="brand-status">
+            <span class="pulse-dot" id="pulse-dot"></span>
+            <span id="status-text">Active</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-pill" id="stat-pill" title="Total Shorts redirected">
+        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M17 1l4 4-4 4"/>
+          <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+          <path d="M7 23l-4-4 4-4"/>
+          <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+        </svg>
+        <span id="stat-count">0</span>
+      </div>
+    </header>
+
+    <!-- Master Power / Stop Control -->
+    <div class="master-card" id="master-card">
+      <div class="master-info">
+        <span class="master-title" id="master-title">Protection Active</span>
+        <span class="master-subtitle" id="master-subtitle">Shorts blocked & redirected</span>
+      </div>
+      <button type="button" class="btn-power btn-power-stop" id="btn-master-toggle" title="Click to Stop FocusTube" aria-label="Stop FocusTube">
+        <svg class="power-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+          <line x1="12" y1="2" x2="12" y2="12"></line>
+        </svg>
+        <span id="power-btn-text">Stop</span>
+      </button>
+    </div>
+
+    <!-- Stopped Notice (visible when stopped) -->
+    <div class="stopped-notice hidden" id="stopped-notice">
+      <svg class="stopped-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="10" y1="15" x2="10" y2="9"></line>
+        <line x1="14" y1="15" x2="14" y2="9"></line>
+      </svg>
+      <span>FocusTube is paused. Normal YouTube behavior restored.</span>
+    </div>
+
+    <!-- Controls Wrapper (dimmed when stopped) -->
+    <div class="controls-wrapper" id="controls-wrapper">
+      <!-- Main Mode Selector -->
+      <section class="section" id="mode-section">
+        <label class="section-label">PROTECTION MODE</label>
+      <div class="mode-selector" role="radiogroup" aria-label="Protection Mode">
+        <button type="button" class="mode-btn active" data-mode="strict" role="radio" aria-checked="true" id="btn-mode-strict">
+          <svg class="mode-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Strict</span>
+        </button>
+
+        <button type="button" class="mode-btn" data-mode="redirect_only" role="radio" aria-checked="false" id="btn-mode-redirect-only">
+          <svg class="mode-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+          <span>Redirect</span>
+        </button>
+
+        <button type="button" class="mode-btn" data-mode="custom" role="radio" aria-checked="false" id="btn-mode-custom">
+          <svg class="mode-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="21" x2="4" y2="14"/>
+            <line x1="4" y1="10" x2="4" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12" y2="3"/>
+            <line x1="20" y1="21" x2="20" y2="16"/>
+            <line x1="20" y1="12" x2="20" y2="3"/>
+            <line x1="1" y1="14" x2="7" y2="14"/>
+            <line x1="9" y1="8" x2="15" y2="8"/>
+            <line x1="17" y1="16" x2="23" y2="16"/>
+          </svg>
+          <span>Custom</span>
+        </button>
+      </div>
+
+      <div class="mode-description" id="mode-desc">
+        Strict mode redirects Shorts URLs to the standard watch player and hides all navigation tabs, shelves, and cards.
+      </div>
+    </section>
+
+    <!-- Custom Toggles Container (Visible in Custom Mode) -->
+    <section class="section custom-section hidden" id="custom-section">
+      <div class="custom-header">
+        <label class="section-label">CUSTOM CONTROLS</label>
+      </div>
+
+      <div class="toggle-list">
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-title">Redirect Shorts</span>
+            <span class="toggle-hint">Converts /shorts/ to regular watch player</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-redirectShorts" data-key="redirectShorts">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-title">Hide Sidebar Link</span>
+            <span class="toggle-hint">Hides Shorts from navigation guide</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-hideSidebarShorts" data-key="hideSidebarShorts">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-title">Hide Feed Shelves</span>
+            <span class="toggle-hint">Hides Shorts rows on Home and Subscriptions</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-hideFeedShelves" data-key="hideFeedShelves">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-title">Hide Search Shorts</span>
+            <span class="toggle-hint">Hides Shorts shelves and cards in search</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-hideSearchShorts" data-key="hideSearchShorts">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-title">Hide Recommended</span>
+            <span class="toggle-hint">Hides Shorts in the watch next sidebar</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-hideWatchNextShorts" data-key="hideWatchNextShorts">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-title">Hide Channel Shorts</span>
+            <span class="toggle-hint">Hides Shorts tab on channel pages</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-hideChannelShortsTab" data-key="hideChannelShortsTab">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-title">Rewrite Links</span>
+            <span class="toggle-hint">Rewrites links for middle-click & context menu</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-rewriteLinks" data-key="rewriteLinks">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-title">Preserve Timestamp</span>
+            <span class="toggle-hint">Retains ?t= time offsets when redirecting</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-preserveTimestamp" data-key="preserveTimestamp">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+  </div> <!-- /controls-wrapper -->
+
+    <!-- Footer -->
+    <footer class="footer">
+      <button type="button" class="footer-btn" id="btn-open-options">
+        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span>Options & Diagnostics</span>
+      </button>
+
+      <span class="version-label">v1.0.0</span>
+    </footer>
+  </div>
+
+  <script src="popup.bundle.js"></script>
+</body>
+</html>

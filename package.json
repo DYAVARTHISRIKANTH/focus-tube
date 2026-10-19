@@ -1,0 +1,32 @@
+{
+  "name": "focustube-shorts-to-regular-player",
+  "version": "1.0.0",
+  "description": "Chrome Extension (MV3) that automatically redirects YouTube Shorts to the regular player and provides customizable controls to hide Shorts navigation, shelves, and cards.",
+  "type": "module",
+  "scripts": {
+    "icons": "node scripts/generate-icons.js",
+    "bundle:content": "esbuild src/content/content.js --bundle --outfile=src/content/content.bundle.js --format=iife",
+    "bundle:worker": "esbuild src/background/service-worker.js --bundle --outfile=src/background/service-worker.bundle.js --format=iife",
+    "bundle:popup": "esbuild src/popup/popup.js --bundle --outfile=src/popup/popup.bundle.js --format=iife",
+    "bundle:options": "esbuild src/options/options.js --bundle --outfile=src/options/options.bundle.js --format=iife",
+    "dev": "node dev-server.js",
+    "start": "node dev-server.js",
+    "build": "npm run icons && npm run bundle:content && npm run bundle:worker && npm run bundle:popup && npm run bundle:options",
+    "package": "npm run build && node scripts/package.js",
+    "test": "node --test",
+    "test:watch": "node --test --watch"
+  },
+  "keywords": [
+    "chrome-extension",
+    "manifest-v3",
+    "youtube-shorts",
+    "youtube",
+    "productivity"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "jsdom": "^26.0.0"
+  }
+}

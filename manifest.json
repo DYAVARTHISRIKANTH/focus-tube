@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "FocusTube - YouTube Shorts to Regular Player",
+  "version": "1.0.0",
+  "description": "Automatically redirects YouTube Shorts to the regular player and provides customizable controls to hide Shorts navigation, shelves, and cards.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "FocusTube",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.bundle.js"
+  },
+  "permissions": [
+    "storage",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "*://*.youtube.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*"
+      ],
+      "js": [
+        "src/content/content.bundle.js"
+      ],
+      "run_at": "document_start"
+    }
+  ]
+}

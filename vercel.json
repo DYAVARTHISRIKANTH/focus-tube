@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/", "destination": "/public/index.html" },
+    { "source": "/mock-chrome-api.js", "destination": "/public/mock-chrome-api.js" },
+    { "source": "/studio.css", "destination": "/public/studio.css" },
+    { "source": "/studio.js", "destination": "/public/studio.js" }
+  ]
+}

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusTube Studio - Localhost Testbench</title>
+  <link rel="stylesheet" href="studio.css">
+  <script src="mock-chrome-api.js"></script>
+</head>
+<body>
+  <div class="studio-app">
+    <!-- Top Navigation Bar -->
+    <header class="studio-header">
+      <div class="studio-brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3" fill="url(#grad-logo)"></polygon>
+            <defs>
+              <linearGradient id="grad-logo" x1="5" y1="3" x2="19" y2="21" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FF2A54"/>
+                <stop offset="1" stop-color="#8B5CF6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h1 class="brand-title">FocusTube <span class="tag">STUDIO</span></h1>
+          <span class="brand-sub">Manifest V3 Localhost Testbench</span>
+        </div>
+      </div>
+
+      <nav class="studio-tabs">
+        <button class="tab-btn active" data-tab="simulator">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          <span>YouTube Testbench</span>
+        </button>
+
+        <button class="tab-btn" data-tab="popup">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+            <line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+          <span>Extension Popup</span>
+        </button>
+
+        <button class="tab-btn" data-tab="options">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Options Dashboard</span>
+        </button>
+
+        <button class="tab-btn" data-tab="tests">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <span>Test Suite (34 Passed)</span>
+        </button>
+      </nav>
+
+      <div class="studio-status">
+        <span class="active-mode-badge" id="header-mode-badge">STRICT MODE</span>
+        <div class="stat-counter" title="Total Shorts Redirected">
+          <span class="counter-label">Redirected:</span>
+          <span class="counter-val" id="header-redirect-counter">14</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Viewport -->
+    <main class="studio-main">
+      <!-- Tab 1: Interactive YouTube Simulator -->
+      <section class="tab-content active" id="tab-simulator">
+        <div class="yt-simulator-container">
+          <!-- Simulator Control Toolbar -->
+          <div class="yt-sim-toolbar">
+            <div class="sim-controls">
+              <span class="sim-label">Quick Switch Mode:</span>
+              <div class="sim-btn-group">
+                <button class="sim-mode-btn active" data-mode="strict">Strict (Hide All)</button>
+                <button class="sim-mode-btn" data-mode="redirect_only">Redirect Only</button>
+                <button class="sim-mode-btn" data-mode="custom">Custom</button>
+              </div>
+            </div>
+
+            <div class="sim-url-bar">
+              <span class="url-protocol">https://</span>
+              <span class="url-domain">www.youtube.com</span>
+              <span class="url-path" id="sim-url-path">/</span>
+            </div>
+
+            <div class="sim-actions">
+              <button class="action-pill" id="btn-add-dynamic-shorts">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Simulate Infinite Scroll</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- YouTube Mock Window -->
+          <div class="yt-window">
+            <!-- Simulated YouTube Left Sidebar -->
+            <aside class="yt-sidebar">
+              <div class="yt-sidebar-item active">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="yt-icon"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span>Home</span>
+              </div>
+
+              <!-- TARGET: YouTube Shorts Sidebar Guide Entry -->
+              <ytd-guide-entry-renderer class="yt-sidebar-item shorts-nav-entry">
+                <a href="/shorts/dQw4w9WgXcQ" class="yt-nav-link">
+                  <svg viewBox="0 0 24 24" fill="currentColor" class="yt-icon text-red">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  <span>Shorts</span>
+                  <span class="badge-tag">TARGET</span>
+                </a>
+              </ytd-guide-entry-renderer>
+
+              <div class="yt-sidebar-item">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="yt-icon"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                <span>Subscriptions</span>
+              </div>
+
+              <div class="yt-sidebar-item">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="yt-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                <span>Library</span>
+              </div>
+            </aside>
+
+            <!-- Simulated YouTube Feed -->
+            <div class="yt-content-area">
+              <!-- Notice Banner -->
+              <div class="yt-banner">
+                <span class="banner-title">Interactive YouTube Feed Simulator</span>
+                <span class="banner-desc">Try clicking Shorts cards or switching modes to observe real-time CSS hiding and instant SPA redirection.</span>
+              </div>
+
+              <!-- Section 1: Regular YouTube Videos -->
+              <div class="feed-grid">
+                <div class="video-card">
+                  <div class="thumbnail regular-thumb-1">
+                    <span class="duration">18:42</span>
+                  </div>
+                  <div class="video-info">
+                    <h3 class="video-title"><a href="/watch?v=dQw4w9WgXcQ">Building High-Performance Chrome Extensions in 2026</a></h3>
+                    <span class="channel-name">Google Chrome Developers</span>
+                    <span class="video-meta">142K views • 2 days ago</span>
+                  </div>
+                </div>
+
+                <div class="video-card">
+                  <div class="thumbnail regular-thumb-2">
+                    <span class="duration">24:10</span>
+                  </div>
+                  <div class="video-info">
+                    <h3 class="video-title"><a href="/watch?v=9bZkp7q19f0">Mastering Manifest V3 DeclarativeNetRequest Rules</a></h3>
+                    <span class="channel-name">Frontend Mastery</span>
+                    <span class="video-meta">89K views • 1 week ago</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TARGET: YouTube Shorts Feed Carousel Shelf -->
+              <ytd-rich-shelf-renderer is-shorts class="shorts-shelf-container">
+                <div class="shelf-header">
+                  <div class="shelf-title-wrap">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="yt-icon text-red">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <span class="shelf-title">Shorts</span>
+                  </div>
+                  <span class="shelf-status-tag">ytd-rich-shelf-renderer[is-shorts]</span>
+                </div>
+
+                <div class="shorts-grid" id="shorts-shelf-grid">
+                  <div class="shorts-card">
+                    <a href="/shorts/lYBUbBu4W08?feature=share" class="shorts-link">
+                      <div class="shorts-thumb thumb-short-1">
+                        <span class="shorts-badge">Shorts</span>
+                        <span class="hover-action">Click to Test Redirect</span>
+                      </div>
+                      <span class="shorts-title">Quick CSS Trick: Pure :has() Selector Magic</span>
+                      <span class="shorts-views">1.2M views</span>
+                    </a>
+                  </div>
+
+                  <div class="shorts-card">
+                    <a href="/shorts/5O4_n2Jk8-0?t=15s" class="shorts-link">
+                      <div class="shorts-thumb thumb-short-2">
+                        <span class="shorts-badge">Shorts (?t=15s)</span>
+                        <span class="hover-action">Click to Test Redirect</span>
+                      </div>
+                      <span class="shorts-title">10 Chrome DevTools Secrets You Didn't Know</span>
+                      <span class="shorts-views">840K views</span>
+                    </a>
+                  </div>
+
+                  <div class="shorts-card">
+                    <a href="/shorts/a1b2c3d4e5f" class="shorts-link">
+                      <div class="shorts-thumb thumb-short-3">
+                        <span class="shorts-badge">Shorts</span>
+                        <span class="hover-action">Click to Test Redirect</span>
+                      </div>
+                      <span class="shorts-title">Fast JavaScript MutationObserver Batching</span>
+                      <span class="shorts-views">420K views</span>
+                    </a>
+                  </div>
+                </div>
+              </ytd-rich-shelf-renderer>
+
+              <!-- Section 2: More Regular Videos (Exemptions) -->
+              <div class="feed-grid">
+                <div class="video-card">
+                  <div class="thumbnail regular-thumb-3">
+                    <span class="duration">12:05</span>
+                  </div>
+                  <div class="video-info">
+                    <h3 class="video-title"><a href="/watch?v=k1l2m3n4o5p">Understanding Web Components and Shadow DOM</a></h3>
+                    <span class="channel-name">Tech Academy</span>
+                    <span class="video-meta">310K views • 3 weeks ago</span>
+                  </div>
+                </div>
+
+                <div class="video-card">
+                  <div class="thumbnail regular-thumb-4">
+                    <span class="duration">32:18</span>
+                  </div>
+                  <div class="video-info">
+                    <h3 class="video-title"><a href="/watch?v=q6r7s8t9u0v">Single Page App Navigation & History API Deep Dive</a></h3>
+                    <span class="channel-name">Code Revolution</span>
+                    <span class="video-meta">205K views • 1 month ago</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Protected Section: Comments & Post Replies (Must NEVER Be Hidden) -->
+              <div class="protected-section">
+                <div class="protected-header">
+                  <span class="protected-title">COMMUNITY POSTS & COMMENTS (EXEMPTIONS TEST)</span>
+                  <span class="safe-badge">SAFE - NEVER HIDDEN</span>
+                </div>
+
+                <ytd-post-renderer class="community-post-box">
+                  <div class="post-author">Channel Community Post</div>
+                  <p class="post-content">We just posted a tutorial! Check out the clip here: <a href="/shorts/dQw4w9WgXcQ" class="post-link">Watch Clip</a> or check the full video.</p>
+                </ytd-post-renderer>
+
+                <ytd-comments class="comments-box">
+                  <div class="comment-item">
+                    <span class="comment-user">@dev_explorer:</span>
+                    <span class="comment-text">The segment at <a href="/watch?v=dQw4w9WgXcQ&t=45s">0:45</a> was brilliant! Thanks for sharing.</span>
+                  </div>
+                </ytd-comments>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity & Event Log Console -->
+          <div class="activity-log-drawer">
+            <div class="log-header">
+              <span class="log-title">
+                <span class="pulse-dot"></span> Live Interceptor & Event Log
+              </span>
+              <button class="clear-log-btn" id="btn-clear-logs">Clear Logs</button>
+            </div>
+            <div class="log-body" id="event-log-container">
+              <div class="log-entry info">[FocusTube] Extension initialized at document_start. Hiding styles active.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 2: Embedded Popup Preview -->
+      <section class="tab-content" id="tab-popup">
+        <div class="frame-container">
+          <div class="frame-browser-bar">
+            <div class="traffic-lights">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="frame-title">Chrome Extension Popup (src/popup/popup.html)</span>
+          </div>
+          <iframe src="/src/popup/popup.html" class="popup-iframe" id="popup-frame"></iframe>
+        </div>
+      </section>
+
+      <!-- Tab 3: Embedded Options Dashboard -->
+      <section class="tab-content" id="tab-options">
+        <div class="frame-container frame-full">
+          <div class="frame-browser-bar">
+            <div class="traffic-lights">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="frame-title">Options & Diagnostics Dashboard (src/options/options.html)</span>
+          </div>
+          <iframe src="/src/options/options.html" class="options-iframe" id="options-frame"></iframe>
+        </div>
+      </section>
+
+      <!-- Tab 4: Test Suite Results -->
+      <section class="tab-content" id="tab-tests">
+        <div class="tests-dashboard">
+          <div class="tests-summary-card">
+            <div class="summary-metric">
+              <span class="metric-number text-green">34</span>
+              <span class="metric-label">Tests Passed</span>
+            </div>
+            <div class="summary-metric">
+              <span class="metric-number text-slate">0</span>
+              <span class="metric-label">Failed</span>
+            </div>
+            <div class="summary-metric">
+              <span class="metric-number text-accent">100%</span>
+              <span class="metric-label">Pass Rate</span>
+            </div>
+          </div>
+
+          <div class="test-files-list">
+            <div class="test-file-item">
+              <div class="file-status pass">PASSED</div>
+              <span class="file-name">tests/url-converter.test.js</span>
+              <span class="file-count">9 tests</span>
+            </div>
+            <div class="test-file-item">
+              <div class="file-status pass">PASSED</div>
+              <span class="file-name">tests/settings.test.js</span>
+              <span class="file-count">5 tests</span>
+            </div>
+            <div class="test-file-item">
+              <div class="file-status pass">PASSED</div>
+              <span class="file-name">tests/selectors.test.js</span>
+              <span class="file-count">5 tests</span>
+            </div>
+            <div class="test-file-item">
+              <div class="file-status pass">PASSED</div>
+              <span class="file-name">tests/dom-filter.test.js</span>
+              <span class="file-count">2 tests</span>
+            </div>
+            <div class="test-file-item">
+              <div class="file-status pass">PASSED</div>
+              <span class="file-name">tests/link-rewriter.test.js</span>
+              <span class="file-count">4 tests</span>
+            </div>
+            <div class="test-file-item">
+              <div class="file-status pass">PASSED</div>
+              <span class="file-name">tests/spa-navigation.test.js</span>
+              <span class="file-count">4 tests</span>
+            </div>
+            <div class="test-file-item">
+              <div class="file-status pass">PASSED</div>
+              <span class="file-name">tests/edge-cases.test.js</span>
+              <span class="file-count">5 tests</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast hidden" id="studio-toast">
+    <div class="toast-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+        <path d="M5 12l5 5L20 7"/>
+      </svg>
+    </div>
+    <div class="toast-content">
+      <span class="toast-title" id="toast-title">Redirection Triggered</span>
+      <span class="toast-message" id="toast-msg">/shorts/ID was redirected to /watch?v=ID</span>
+    </div>
+  </div>
+
+  <script src="studio.js"></script>
+</body>
+</html>
