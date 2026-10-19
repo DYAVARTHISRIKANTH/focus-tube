@@ -37,8 +37,18 @@ Follow these 4 simple steps to install and run FocusTube on your browser in unde
 
 ### 1️⃣ Step-by-Step Installation (Load Unpacked)
 
+#### 1. Obtain the Project
+Clone the repository or download the ZIP from GitHub:
+
+```bash
+git clone https://github.com/DYAVARTHISRIKANTH/focus-tube.git
+cd focus-tube
+```
+*(Or click **Code** ➔ **Download ZIP** on GitHub and extract the folder).*
+
+#### 2. Load into Google Chrome
 1. **Open the Extensions Page**:
-   - In Google Chrome, type or paste `chrome://extensions` in your address bar and press <kbd>Enter</kbd>.
+   - In Google Chrome, navigate to `chrome://extensions` in your address bar and press <kbd>Enter</kbd>.
    - Alternatively, click the Chrome menu (**⋮**) ➔ **Extensions** ➔ **Manage Extensions**.
 
 2. **Enable Developer Mode**:
@@ -46,10 +56,7 @@ Follow these 4 simple steps to install and run FocusTube on your browser in unde
 
 3. **Load the Extension**:
    - Click the **Load unpacked** button in the top-left toolbar.
-   - In the file picker dialog, select the project folder:
-     ```
-     C:\spring-boot-developer-toolkit\FocusTube
-     ```
+   - In the file picker dialog, select the cloned or extracted project folder (`focus-tube`).
    - Click **Select Folder**.
 
 4. **Pin for Easy Access**:
@@ -149,13 +156,13 @@ npm test
 
 | Test Suite | Tests | Covered Behavior |
 |:---|:---:|:---|
-| [`url-converter.test.js`](file:///c:/spring-boot-developer-toolkit/FocusTube/tests/url-converter.test.js) | 9 | 11-character video ID validation, relative paths, query params, timestamps, hash anchors |
-| [`settings.test.js`](file:///c:/spring-boot-developer-toolkit/FocusTube/tests/settings.test.js) | 5 | Strict, Redirect Only, Custom modes, **Master Stop Switch (`enabled: false`)**, sanitization |
-| [`selectors.test.js`](file:///c:/spring-boot-developer-toolkit/FocusTube/tests/selectors.test.js) | 5 | Container selectors, dynamic CSS generation, non-empty groups, comment exemptions |
-| [`dom-filter.test.js`](file:///c:/spring-boot-developer-toolkit/FocusTube/tests/dom-filter.test.js) | 2 | JSDOM style tag injection, dynamic mode toggle removal, zero thrashing |
-| [`link-rewriter.test.js`](file:///c:/spring-boot-developer-toolkit/FocusTube/tests/link-rewriter.test.js) | 4 | Link attribute mutation, URL transformation, single/batch reversion |
-| [`spa-navigation.test.js`](file:///c:/spring-boot-developer-toolkit/FocusTube/tests/spa-navigation.test.js) | 4 | SPA event hooks, duplicate suppression, loop circuit breaker activation |
-| [`edge-cases.test.js`](file:///c:/spring-boot-developer-toolkit/FocusTube/tests/edge-cases.test.js) | 5 | Community post replies, timestamped comments, search results, DNR regex compliance |
+| [`tests/url-converter.test.js`](tests/url-converter.test.js) | 9 | 11-character video ID validation, relative paths, query params, timestamps, hash anchors |
+| [`tests/settings.test.js`](tests/settings.test.js) | 5 | Strict, Redirect Only, Custom modes, **Master Stop Switch (`enabled: false`)**, sanitization |
+| [`tests/selectors.test.js`](tests/selectors.test.js) | 5 | Container selectors, dynamic CSS generation, non-empty groups, comment exemptions |
+| [`tests/dom-filter.test.js`](tests/dom-filter.test.js) | 2 | JSDOM style tag injection, dynamic mode toggle removal, zero thrashing |
+| [`tests/link-rewriter.test.js`](tests/link-rewriter.test.js) | 4 | Link attribute mutation, URL transformation, single/batch reversion |
+| [`tests/spa-navigation.test.js`](tests/spa-navigation.test.js) | 4 | SPA event hooks, duplicate suppression, loop circuit breaker activation |
+| [`tests/edge-cases.test.js`](tests/edge-cases.test.js) | 5 | Community post replies, timestamped comments, search results, DNR regex compliance |
 | **Total Passed** | **34** | **All 34 passing with 0 failures** |
 
 ---
@@ -238,7 +245,7 @@ FocusTube/
 
 For developers making modifications:
 
-```powershell
+```bash
 # 1. Build bundled JavaScript for content, worker, popup, options
 npm run build
 
